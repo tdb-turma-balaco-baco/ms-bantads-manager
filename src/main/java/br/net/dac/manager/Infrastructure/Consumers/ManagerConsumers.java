@@ -7,8 +7,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import br.net.dac.manager.Application.Services.Manager.IManagerService;
+import br.net.dac.manager.Application.Services.Manager.Events.ChangeManagerClients;
 import br.net.dac.manager.Application.Services.Manager.Events.RemoveManagerEvent;
 import br.net.dac.manager.Application.Services.Manager.Events.SaveManagerEvent;
+import br.net.dac.manager.Application.Services.Manager.Events.SelectMaxClientEvent;
+import br.net.dac.manager.Application.Services.Manager.Events.SelectMinClientEvent;
 import br.net.dac.manager.Application.Services.Manager.Events.UpdateManagerEvent;
 
 @Component
@@ -31,5 +34,18 @@ public class ManagerConsumers {
     @RabbitHandler
     public void receiveRemove(@Payload RemoveManagerEvent event){
         _service.removeManager(event);
+    }
+
+    @RabbitHandler
+    public void receiveChangeManagerClients(@Payload ChangeManagerClients event){
+        _service.changeManagerClients(event);
+    }
+    @RabbitHandler
+    public void receiveMinClients(@Payload SelectMinClientEvent event){
+        _service.selectManagerMinClient(event);
+    }
+    @RabbitHandler
+    public void receiveRemove(@Payload SelectMaxClientEvent event){
+        _service.selectManagerMaxClient(event);
     }
 }

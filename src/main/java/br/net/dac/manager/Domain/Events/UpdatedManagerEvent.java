@@ -1,5 +1,7 @@
 package br.net.dac.manager.Domain.Events;
 
+import br.net.dac.manager.Domain.Events.Common.DomainEvent;
+
 public class UpdatedManagerEvent extends DomainEvent {
     private String name;
     private String cpf;

@@ -15,9 +15,17 @@ import org.springframework.amqp.support.converter.DefaultClassMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 
+import br.net.dac.manager.Application.Services.Manager.Events.ChangeManagerClients;
 import br.net.dac.manager.Application.Services.Manager.Events.RemoveManagerEvent;
 import br.net.dac.manager.Application.Services.Manager.Events.SaveManagerEvent;
+import br.net.dac.manager.Application.Services.Manager.Events.SelectMaxClientEvent;
+import br.net.dac.manager.Application.Services.Manager.Events.SelectMinClientEvent;
 import br.net.dac.manager.Application.Services.Manager.Events.UpdateManagerEvent;
+import br.net.dac.manager.Domain.Events.ChangedManagerClientsEvent;
+import br.net.dac.manager.Domain.Events.CreatedManagerEvent;
+import br.net.dac.manager.Domain.Events.SelectedManagerEvent;
+import br.net.dac.manager.Domain.Events.SelectedTopEvent;
+import br.net.dac.manager.Domain.Events.UpdatedManagerEvent;
 
 @Configuration
 public class RabbitConfig {
@@ -58,6 +66,16 @@ public class RabbitConfig {
         idClassMapping.put("CreateManagerEvent", SaveManagerEvent.class);
         idClassMapping.put("RemoveManagerEvent", RemoveManagerEvent.class);
         idClassMapping.put("UpdateManagerEvent", UpdateManagerEvent.class);
+
+        idClassMapping.put("ChangeManagerClients", ChangeManagerClients.class);
+        idClassMapping.put("SelectMaxCientEvent", SelectMaxClientEvent.class);
+        idClassMapping.put("SelectMinClientEvent", SelectMinClientEvent.class);
+
+        idClassMapping.put("ChangedManagerClientsEvent", ChangedManagerClientsEvent.class);
+        idClassMapping.put("CreatedManagerEvent", CreatedManagerEvent.class);
+        idClassMapping.put("SelectedManagerEvent", SelectedManagerEvent.class);
+        idClassMapping.put("SelectedTopEvent", SelectedTopEvent.class);
+        idClassMapping.put("UpdatedManagerEvent", UpdatedManagerEvent.class);
         
         return idClassMapping;
     }

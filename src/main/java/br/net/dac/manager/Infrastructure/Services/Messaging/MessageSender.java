@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import br.net.dac.manager.Application.Abstractions.IMessageSender;
-import br.net.dac.manager.Domain.Events.DomainEvent;
+import br.net.dac.manager.Domain.Events.Common.DomainEvent;
 
 @Component
 public class MessageSender implements IMessageSender {
