@@ -41,7 +41,7 @@ public class ManagerService implements IManagerService {
 
         _managerRepository.saveAndFlush(manager);
 
-        CreatedManagerEvent eventDomain = new CreatedManagerEvent(event.getName(), event.getCpf(), event.getEmail());
+        CreatedManagerEvent eventDomain = new CreatedManagerEvent(event.getName(), event.getEmail(), event.getCpf());
         _messageSender.sendMessage(eventDomain);
     }
 
@@ -54,9 +54,12 @@ public class ManagerService implements IManagerService {
         manager.setPhone(event.getPhone());
 
         _managerRepository.saveAndFlush(manager);      
-        
-        UpdatedManagerEvent eventDomain = new UpdatedManagerEvent(event.getName(), event.getCpf());
-        _messageSender.sendMessage(eventDomain);
+
+        if(manager.getTotalAccounts() > 0)
+        {
+            UpdatedManagerEvent eventDomain = new UpdatedManagerEvent(event.getName(), event.getCpf());
+            _messageSender.sendMessage(eventDomain);
+        }
         
     }
 
