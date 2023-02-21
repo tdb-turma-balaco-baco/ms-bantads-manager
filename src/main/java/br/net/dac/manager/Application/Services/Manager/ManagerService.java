@@ -33,16 +33,20 @@ public class ManagerService implements IManagerService {
 
     @Override
     public void saveManager(SaveManagerEvent event) {
-        Manager manager = new Manager(event.getName(),
-                            event.getEmail(), 
-                            event.getCpf(), 
-                            event.getPhone(), 
-                            0);
+        boolean existManager = _managerRepository.findOneByCpf(event.getCpf()) != null;
 
-        _managerRepository.saveAndFlush(manager);
+        if(!existManager){
+            Manager manager = new Manager(event.getName(),
+                                event.getEmail(), 
+                                event.getCpf(), 
+                                event.getPhone(), 
+                                0);
 
-        CreatedManagerEvent eventDomain = new CreatedManagerEvent(event.getName(), event.getEmail(), event.getCpf());
-        _messageSender.sendMessage(eventDomain);
+            _managerRepository.saveAndFlush(manager);
+
+            CreatedManagerEvent eventDomain = new CreatedManagerEvent(event.getName(), event.getEmail(), event.getCpf());
+            _messageSender.sendMessage(eventDomain);
+        }
     }
 
     @Override
@@ -87,7 +91,7 @@ public class ManagerService implements IManagerService {
         _managerRepository.saveAndFlush(manager);
 
         SelectedManagerEvent eventDomain = new SelectedManagerEvent(event.getEmail(),
-         event.getName(), event.getCpf(), event.getWage(), manager.getName(), event.getCpf());
+         event.getName(), event.getCpf(), event.getWage(), manager.getName(), manager.getCpf());
 
          _messageSender.sendMessage(eventDomain);
 
@@ -114,20 +118,24 @@ public class ManagerService implements IManagerService {
 
     @Override
     public void changeManagerClients(ChangeManagerClients event) {
-        Manager currentManager = _managerRepository.findOneByCpf(event.getCpfRemover());
-
-        Manager manager = _managerRepository.findTop1ByCpfNotOrderByTotalAccountsAsc(event.getCpfRemover());
-
-        manager.setTotalAccounts(manager.getTotalAccounts() + currentManager.getTotalAccounts());
-        currentManager.setTotalAccounts(0);
-
-        _managerRepository.save(currentManager);
-        _managerRepository.save(manager);
-        _managerRepository.flush();
-        
-
-        ChangedManagerClientsEvent eventDomain = new ChangedManagerClientsEvent(manager.getName(), manager.getCpf(), currentManager.getCpf(), true);
-        _messageSender.sendMessage(eventDomain);
+        List<Manager> managers = _managerRepository.findAll();
+        if(managers.size() > 1)
+        {
+            Manager currentManager = _managerRepository.findOneByCpf(event.getCpfRemover());
+    
+            Manager manager = _managerRepository.findTop1ByCpfNotOrderByTotalAccountsAsc(event.getCpfRemover());
+    
+            manager.setTotalAccounts(manager.getTotalAccounts() + currentManager.getTotalAccounts());
+            currentManager.setTotalAccounts(0);
+    
+            _managerRepository.save(currentManager);
+            _managerRepository.save(manager);
+            _managerRepository.flush();
+            
+    
+            ChangedManagerClientsEvent eventDomain = new ChangedManagerClientsEvent(manager.getName(), manager.getCpf(), currentManager.getCpf(), true);
+            _messageSender.sendMessage(eventDomain);
+        } 
 
     }
     
