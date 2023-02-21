@@ -41,7 +41,7 @@ public class ManagerService implements IManagerService {
 
         _managerRepository.saveAndFlush(manager);
 
-        CreatedManagerEvent eventDomain = new CreatedManagerEvent(event.getName(), event.getCpf());
+        CreatedManagerEvent eventDomain = new CreatedManagerEvent(event.getName(), event.getCpf(), event.getEmail());
         _messageSender.sendMessage(eventDomain);
     }
 
@@ -93,18 +93,20 @@ public class ManagerService implements IManagerService {
     @Override
     public void selectManagerMaxClient(SelectMaxClientEvent event) {
         Manager managerMax = _managerRepository.findTop1ByOrderByTotalAccountsDesc();
-        managerMax.setTotalAccounts(managerMax.getTotalAccounts() - 1);
+        if(managerMax != null && managerMax.getTotalAccounts() > 1)
+        {
+            managerMax.setTotalAccounts(managerMax.getTotalAccounts() - 1);
+    
+            Manager managerMin = _managerRepository.findTop1ByOrderByTotalAccountsAsc();
+            managerMin.setTotalAccounts(managerMin.getTotalAccounts() + 1);
+    
+            _managerRepository.save(managerMax);
+            _managerRepository.save(managerMin);
+            _managerRepository.flush();
 
-        Manager managerMin = _managerRepository.findTop1ByOrderByTotalAccountsAsc();
-        managerMin.setTotalAccounts(managerMin.getTotalAccounts() + 1);
-
-        _managerRepository.save(managerMax);
-        _managerRepository.save(managerMin);
-        _managerRepository.flush();
-
-        SelectedTopEvent eventDomain = new SelectedTopEvent(managerMin.getName(), managerMin.getCpf(), managerMax.getCpf(), false);
-        _messageSender.sendMessage(eventDomain);
-        
+            SelectedTopEvent eventDomain = new SelectedTopEvent(managerMin.getName(), managerMin.getCpf(), managerMax.getCpf(), false);
+            _messageSender.sendMessage(eventDomain);
+        }
     }
 
     @Override

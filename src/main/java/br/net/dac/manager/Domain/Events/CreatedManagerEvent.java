@@ -4,13 +4,14 @@ import br.net.dac.manager.Domain.Events.Common.DomainEvent;
 
 public class CreatedManagerEvent extends DomainEvent {
     private String name;
+    private String email;
     private String cpf;
 
-    public CreatedManagerEvent(String name, String cpf) {
+    public CreatedManagerEvent(String name, String email, String cpf) {
         this.name = name;
+        this.email = email;
         this.cpf = cpf;
     }
-    
     public String getName() {
         return name;
     }
@@ -22,6 +23,12 @@ public class CreatedManagerEvent extends DomainEvent {
     }
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     
