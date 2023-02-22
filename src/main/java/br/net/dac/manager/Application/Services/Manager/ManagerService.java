@@ -78,7 +78,7 @@ public class ManagerService implements IManagerService {
     @Override
     public List<ManagerResult> getAllManagers() {
         List<Manager> managers = _managerRepository.findAll();
-        List<ManagerResult> managerResults = managers.stream().map(m -> new ManagerResult(m.getId(), m.getName(), m.getEmail(), m.getCpf(), m.getPhone())).collect(Collectors.toList());
+        List<ManagerResult> managerResults = managers.stream().map(m -> new ManagerResult(m.getId(), m.getName(), m.getEmail(), m.getCpf(), m.getPhone(), m.getTotalAccounts())).collect(Collectors.toList());
         return managerResults;
     }
 

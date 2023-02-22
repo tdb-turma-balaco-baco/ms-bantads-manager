@@ -6,13 +6,15 @@ public class ManagerResult {
     private String email;
     private String cpf;
     private String phone;
+    private int totalAccounts;
 
-    public ManagerResult(Long id, String name, String email, String cpf, String phone) {
+    public ManagerResult(Long id, String name, String email, String cpf, String phone, int totalAccounts) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.cpf = cpf;
         this.phone = phone;
+        this.totalAccounts = totalAccounts;
     }
     public Long getId() {
         return id;
@@ -43,6 +45,12 @@ public class ManagerResult {
     }
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+    public int getTotalAccounts() {
+        return totalAccounts;
+    }
+    public void setTotalAccounts(int totalAccounts) {
+        this.totalAccounts = totalAccounts;
     }
     
 }
