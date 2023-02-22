@@ -71,7 +71,7 @@ public class ManagerService implements IManagerService {
     public void removeManager(RemoveManagerEvent event) {
         List<Manager> managers = _managerRepository.findAll();
         if(managers.size() > 1){
-            _managerRepository.deleteById(event.getManagerId());        
+            _managerRepository.deleteByCpf(event.getCpf());        
         } 
     }
 

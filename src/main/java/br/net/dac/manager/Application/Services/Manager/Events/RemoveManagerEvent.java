@@ -1,17 +1,19 @@
 package br.net.dac.manager.Application.Services.Manager.Events;
 
 public class RemoveManagerEvent {
-    public Long managerId;
+    private String cpf;
 
     public RemoveManagerEvent() {
     }
 
-    public Long getManagerId() {
-        return managerId;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setManagerId(Long managerId) {
-        this.managerId = managerId;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
+
+    
     
 }

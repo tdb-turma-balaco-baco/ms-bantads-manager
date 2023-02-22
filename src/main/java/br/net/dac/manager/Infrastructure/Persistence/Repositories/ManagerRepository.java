@@ -16,4 +16,6 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Manager findTop1ByOrderByTotalAccountsDesc();
 
     Manager findOneByCpf(@Param("cpf") String cpf);
+
+    void deleteByCpf(@Param("cpf") String cpf);
 }
