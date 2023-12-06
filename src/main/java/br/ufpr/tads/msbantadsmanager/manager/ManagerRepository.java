@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface ManagerRepository extends JpaRepository<Manager, Long> {
     Optional<Manager> findManagerByEmail(@NonNull String email);
     Optional<Manager> findManagerByCpf(@NonNull String cpf);
+    int countAllByEmailOrCpf(String email, String cpf);
 }

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,8 @@ class ManagerControllerIntegrationTest {
         var request = new CreateManager(
                 emptyFirstName,
                 "lastName",
-                "12312312311",
                 "manager@email.com",
+                "12312312311",
                 "11999999999",
                 "admin@email.com"
         );
@@ -68,8 +69,8 @@ class ManagerControllerIntegrationTest {
         var request = new CreateManager(
                 "firstName",
                 emptyLastName,
-                "12312312311",
                 "manager@email.com",
+                "12312312311",
                 "11999999999",
                 "admin@email.com"
         );
@@ -94,8 +95,8 @@ class ManagerControllerIntegrationTest {
         var request = new CreateManager(
                 "firstName",
                 "lastName",
-                invalidCpf,
                 "manager@email.com",
+                invalidCpf,
                 "11999999999",
                 "admin@email.com"
         );
@@ -120,8 +121,8 @@ class ManagerControllerIntegrationTest {
         var request = new CreateManager(
                 "firstName",
                 "lastName",
-                "12345678901",
                 invalidEmail,
+                "12345678901",
                 "11999999999",
                 "admin@email.com"
         );
@@ -146,8 +147,8 @@ class ManagerControllerIntegrationTest {
         var request = new CreateManager(
                 "firstName",
                 "lastName",
-                "12345678901",
                 "manager@email.com",
+                "12345678901",
                 invalidPhone,
                 "admin@email.com"
         );
@@ -164,14 +165,56 @@ class ManagerControllerIntegrationTest {
         assertEquals(0, this.repository.count());
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {
+            "manager@email.com,12312312311,manager@email.com,12312312311",
+            "manager@email.com,12312312311,manager@email.com,99999999999",
+            "manager@email.com,12312312311,different@email.com,12312312311",
+    })
+    @DisplayName("should not create a duplicate manager")
+    void return409_createDuplicate(String createEmail,
+                                   String createCpf,
+                                   String email,
+                                   String cpf) throws Exception {
+        var request = new CreateManager(
+                "firstName",
+                "lastName",
+                createEmail,
+                createCpf,
+                "12345678901",
+                "admin@email.com"
+        );
+        var json = objectMapper.writeValueAsString(request);
+
+        var saved = new CreateManager(
+                "anotherName",
+                "anotherLast",
+                email,
+                cpf,
+                "12345678901",
+                "admin@email.com"
+        );
+        this.repository.save(new Manager(saved));
+
+        this.mockMvc
+                .perform(post(URL)
+                        .content(json)
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isConflict());
+
+        assertEquals(1, this.repository.count());
+    }
+
     @Test
     @DisplayName("should create a new manager successfully")
     void return201_createSuccessfully() throws Exception {
         var request = new CreateManager(
                 "firstName",
                 "lastName",
-                "12312312311",
                 "manager@email.com",
+                "12312312311",
                 "12345678901",
                 "admin@email.com"
         );

@@ -29,8 +29,8 @@ class ManagerRepositoryTest {
         var createManager = new CreateManager(
                 "firstName",
                 "lastName",
-                "12312312300",
                 "email@email.com",
+                "12312312300",
                 "1112341234",
                 "admin@admin.com");
         validEntity = new Manager(createManager);

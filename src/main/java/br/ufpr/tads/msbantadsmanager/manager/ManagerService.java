@@ -71,6 +71,12 @@ public class ManagerService {
     public Long create(@Valid @NonNull CreateManager createManager) {
         log.debug("[creating] {}", createManager);
 
+        boolean managerAlreadyExists = this.repository.countAllByEmailOrCpf(createManager.email(), createManager.cpf()) > 0;
+        if (managerAlreadyExists) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT);
+        }
+
+
         var entity = new Manager(createManager);
         return this.repository.save(entity).getId();
     }
