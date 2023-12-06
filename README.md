@@ -36,5 +36,5 @@ $ mvn spring-boot:run -f pom.xml
 
 To run all the tests, execute the following `maven` goal.
 ```bash
-mvn test -f pom.xml
+$ mvn test -f pom.xml
 ```
