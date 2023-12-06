@@ -33,7 +33,7 @@ class ManagerRepositoryTest {
                 "12312312300",
                 "1112341234",
                 "admin@admin.com");
-        validEntity = new Manager(createManager);
+        validEntity = Manager.create(createManager);
     }
 
     @BeforeEach

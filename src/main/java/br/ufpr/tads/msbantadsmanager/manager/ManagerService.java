@@ -76,8 +76,7 @@ public class ManagerService {
             throw new ResponseStatusException(HttpStatus.CONFLICT);
         }
 
-
-        var entity = new Manager(createManager);
+        var entity = Manager.create(createManager);
         return this.repository.save(entity).getId();
     }
 

@@ -25,18 +25,18 @@ public class ManagerController {
     private final ManagerService service;
 
     @GetMapping
-    public ResponseEntity<?> findManager(@RequestParam @Valid @Email String email,
-                                         @RequestParam @Valid @Length(min = 11, max = 11) String cpf) {
+    public ResponseEntity<?> findManager(@RequestParam(required = false) @Valid @Email @Length(min = 6) String email,
+                                         @RequestParam(required = false) @Length(min = 11, max = 11) String cpf) {
         log.debug("[request] findManager(email: {} , cpf: {})", email, cpf);
-
-        if (Objects.nonNull(email)) {
-            log.debug("[request] findManagerByEmail '{}'", email);
-            return ResponseEntity.ok(this.service.findManagerByEmail(email));
-        }
 
         if (Objects.nonNull(cpf)) {
             log.debug("[request] findManagerByCpf '{}'", cpf);
             return ResponseEntity.ok(this.service.findManagerByCpf(cpf));
+        }
+
+        if (Objects.nonNull(email)) {
+            log.debug("[request] findManagerByEmail '{}'", email);
+            return ResponseEntity.ok(this.service.findManagerByEmail(email));
         }
 
         return ResponseEntity.ok(this.service.findAllManagers());

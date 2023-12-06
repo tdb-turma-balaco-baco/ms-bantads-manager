@@ -2,9 +2,7 @@ package br.ufpr.tads.msbantadsmanager.manager;
 
 import br.ufpr.tads.msbantadsmanager.manager.inbound.CreateManager;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -18,8 +16,6 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Table(name = "managers")
-@NoArgsConstructor
-@AllArgsConstructor
 public class Manager implements Serializable {
     @Serial private static final long serialVersionUID = 5397338376573272269L;
 
@@ -59,16 +55,19 @@ public class Manager implements Serializable {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    public Manager(@NonNull CreateManager createManager) {
-        this.setFirstName(createManager.firstName());
-        this.setLastName(createManager.lastName());
-        this.setCpf(createManager.cpf());
-        this.setEmail(createManager.email());
-        this.setPhone(createManager.phone());
-        this.setCreatedBy(createManager.createdBy());
+    public static Manager create(@NonNull CreateManager createManager) {
+        var entity = new Manager();
+        entity.setFirstName(createManager.firstName());
+        entity.setLastName(createManager.lastName());
+        entity.setCpf(createManager.cpf());
+        entity.setEmail(createManager.email());
+        entity.setPhone(createManager.phone());
+        entity.setCreatedBy(createManager.createdBy());
 
         LocalDateTime now = LocalDateTime.now();
-        this.setCreatedAt(now);
-        this.setUpdatedAt(now);
+        entity.setCreatedAt(now);
+        entity.setUpdatedAt(now);
+
+        return entity;
     }
 }
