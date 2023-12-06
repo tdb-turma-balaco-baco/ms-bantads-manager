@@ -1,5 +1,6 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
+import br.ufpr.tads.msbantadsmanager.manager.inbound.CreateManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,24 +20,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 class ManagerRepositoryTest {
-    @Autowired private ManagerRepository repository;
+    @Autowired
+    private ManagerRepository repository;
     private static Manager validEntity;
 
     @BeforeAll
     static void beforeAll() {
-        validEntity = new Manager();
-        validEntity.setCpf("12312312300");
-        validEntity.setEmail("email@email.com");
-        validEntity.setPhone("1112341234");
-        validEntity.setFirstName("firstName");
-        validEntity.setLastName("lastName");
-        validEntity.setCreatedAt(LocalDateTime.now());
-        validEntity.setUpdatedAt(LocalDateTime.now());
+        var createManager = new CreateManager(
+                "firstName",
+                "lastName",
+                "12312312300",
+                "email@email.com",
+                "1112341234",
+                "admin@admin.com");
+        validEntity = new Manager(createManager);
     }
 
     @BeforeEach
     void setUp() {
         this.repository.deleteAll();
+    }
+
+    @Test
+    @DisplayName("should successfully create a manager with dto CreateManager")
+    void success_save() {
+        this.repository.save(validEntity);
+        assertEquals(1, this.repository.count());
     }
 
     @ParameterizedTest
@@ -69,13 +78,6 @@ class ManagerRepositoryTest {
     void findManagerByCpf() {
         this.repository.save(validEntity);
         assertTrue(this.repository.findManagerByCpf(validEntity.getCpf()).isPresent());
-    }
-
-    @Test
-    @DisplayName("should successfully create a manager")
-    void success_save() {
-        this.repository.save(validEntity);
-        assertEquals(1, this.repository.count());
     }
 
     @Test
