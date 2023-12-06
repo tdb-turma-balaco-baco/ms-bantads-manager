@@ -1,12 +1,10 @@
 # ms-bantads-manager
 
-This project is part of a college assignment, with the objective of implementing
+The Bantads project is part of a college assignment, with the objective of implementing
 a microservices based architecture, with various technologies, such as
 Java, Spring Boot, Nodejs, Docker, PostgreSQL, etc.
 
-## Manager Microservice
-
-This repository contains de manager microservice.
+This repository contains the manager microservice.
 
 ## Requirements and Usage
 
