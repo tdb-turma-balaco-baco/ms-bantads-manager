@@ -17,7 +17,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "managers")
 public class Manager implements Serializable {
-    @Serial private static final long serialVersionUID = 5397338376573272269L;
+    @Serial
+    private static final long serialVersionUID = 5397338376573272269L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "managers_id_seq")
@@ -39,13 +40,16 @@ public class Manager implements Serializable {
     @Column(nullable = false)
     private String phone;
 
-    @Column private boolean isActive = true;
+    @Column
+    private boolean isActive = true;
 
     @CreatedBy
-    @Column private String createdBy;
+    @Column
+    private String createdBy;
 
     @LastModifiedBy
-    @Column private String updatedBy;
+    @Column
+    private String updatedBy;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
