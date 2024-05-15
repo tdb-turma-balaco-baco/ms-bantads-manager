@@ -11,7 +11,7 @@ management:
 
 spring:
   application:
-    name: ms-bantads-manager
+    name: ms-bantads-manager-tests
   threads:
     virtual:
       enabled: true
@@ -22,13 +22,13 @@ spring:
       add-mappings: false # disable static content
   datasource:
     driver-class-name: org.postgresql.Driver
-    username: ${DB_USER:bantads}
-    password: ${DB_PASS:secret}
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/bantads}
+    username: bantads
+    password: secret
+    url: jdbc:tc:postgresql:latest:///bantads
   flyway:
     enabled: true
   jpa:
     hibernate:
       ddl-auto: none
-    show-sql: false
+    show-sql: true
     open-in-view: false # disables lazy loading in web views, important for performance
