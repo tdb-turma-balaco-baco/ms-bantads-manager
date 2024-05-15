@@ -18,7 +18,6 @@ import java.util.List;
 
 @Slf4j
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ManagerService {
     private final ManagerRepository repository;
