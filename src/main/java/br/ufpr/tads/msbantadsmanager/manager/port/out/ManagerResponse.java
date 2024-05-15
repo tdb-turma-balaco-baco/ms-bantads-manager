@@ -1,4 +1,4 @@
-package br.ufpr.tads.msbantadsmanager.manager.outbound;
+package br.ufpr.tads.msbantadsmanager.manager.port.out;
 
 import br.ufpr.tads.msbantadsmanager.manager.Manager;
 import jakarta.validation.constraints.NotNull;

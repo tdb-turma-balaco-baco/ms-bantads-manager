@@ -1,6 +1,6 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
-import br.ufpr.tads.msbantadsmanager.manager.inbound.CreateManager;
+import br.ufpr.tads.msbantadsmanager.manager.port.in.CreateManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

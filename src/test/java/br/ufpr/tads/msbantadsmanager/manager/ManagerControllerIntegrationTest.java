@@ -1,7 +1,7 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
-import br.ufpr.tads.msbantadsmanager.manager.inbound.CreateManager;
-import br.ufpr.tads.msbantadsmanager.manager.outbound.ManagerResponse;
+import br.ufpr.tads.msbantadsmanager.manager.port.in.CreateManager;
+import br.ufpr.tads.msbantadsmanager.manager.port.out.ManagerResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

@@ -1,7 +1,7 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
-import br.ufpr.tads.msbantadsmanager.manager.inbound.CreateManager;
-import br.ufpr.tads.msbantadsmanager.manager.outbound.ManagerResponse;
+import br.ufpr.tads.msbantadsmanager.manager.port.in.CreateManager;
+import br.ufpr.tads.msbantadsmanager.manager.port.out.ManagerResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;

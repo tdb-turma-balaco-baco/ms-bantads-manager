@@ -1,6 +1,6 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
-import br.ufpr.tads.msbantadsmanager.manager.inbound.CreateManager;
+import br.ufpr.tads.msbantadsmanager.manager.port.in.CreateManager;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedBy;
