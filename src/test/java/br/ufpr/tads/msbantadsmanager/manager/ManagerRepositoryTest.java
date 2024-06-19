@@ -1,6 +1,9 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import br.ufpr.tads.msbantadsmanager.manager.port.in.CreateManager;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,132 +22,129 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Testcontainers
 class ManagerRepositoryTest {
-    @ServiceConnection
-    @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
+  @ServiceConnection @Container
+  static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
-    @Autowired
-    private ManagerRepository repository;
-    private static Manager validEntity;
+  @Autowired private ManagerRepository repository;
+  private static Manager validEntity;
 
-    @BeforeAll
-    static void beforeAll() {
-        var createManager = new CreateManager(
-                "firstName",
-                "lastName",
-                "email@email.com",
-                "12312312300",
-                "1112341234",
-                "admin@admin.com");
-        validEntity = Manager.create(createManager);
-    }
+  @BeforeAll
+  static void beforeAll() {
+    var createManager =
+        new CreateManager(
+            "firstName",
+            "lastName",
+            "email@email.com",
+            "12312312300",
+            "1112341234",
+            "admin@admin.com");
+    validEntity = Manager.create(createManager);
+  }
 
-    @BeforeEach
-    void setUp() {
-        this.repository.deleteAll();
-    }
+  @BeforeEach
+  void setUp() {
+    this.repository.deleteAll();
+  }
 
-    @Test
-    @DisplayName("should successfully create a manager with dto CreateManager")
-    void success_save() {
-        this.repository.save(validEntity);
-        assertEquals(1, this.repository.count());
-    }
+  @Test
+  @DisplayName("should successfully create a manager with dto CreateManager")
+  void success_save() {
+    this.repository.save(validEntity);
+    assertEquals(1, this.repository.count());
+  }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"invalid", "invalid@email.com"})
-    @DisplayName("should not find a manager by invalid email")
-    void invalid_findManagerByEmail(String invalidEmail) {
-        this.repository.save(validEntity);
-        assertTrue(this.repository.findManagerByEmail(invalidEmail).isEmpty());
-    }
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"invalid", "invalid@email.com"})
+  @DisplayName("should not find a manager by invalid email")
+  void invalid_findManagerByEmail(String invalidEmail) {
+    this.repository.save(validEntity);
+    assertTrue(this.repository.findManagerByEmail(invalidEmail).isEmpty());
+  }
 
-    @Test
-    @DisplayName("should find a manager by email")
-    void findManagerByEmail() {
-        this.repository.save(validEntity);
-        assertTrue(this.repository.findManagerByEmail(validEntity.getEmail()).isPresent());
-    }
+  @Test
+  @DisplayName("should find a manager by email")
+  void findManagerByEmail() {
+    this.repository.save(validEntity);
+    assertTrue(this.repository.findManagerByEmail(validEntity.getEmail()).isPresent());
+  }
 
-    @ParameterizedTest
-    @NullAndEmptySource
-    @ValueSource(strings = {"invalid", "99999999999"})
-    @DisplayName("should not find a manager by invalid cpf")
-    void invalid_findManagerByCpf(String invalidCpf) {
-        this.repository.save(validEntity);
-        assertTrue(this.repository.findManagerByCpf(invalidCpf).isEmpty());
-    }
+  @ParameterizedTest
+  @NullAndEmptySource
+  @ValueSource(strings = {"invalid", "99999999999"})
+  @DisplayName("should not find a manager by invalid cpf")
+  void invalid_findManagerByCpf(String invalidCpf) {
+    this.repository.save(validEntity);
+    assertTrue(this.repository.findManagerByCpf(invalidCpf).isEmpty());
+  }
 
-    @Test
-    @DisplayName("should find a manager by cpf")
-    void findManagerByCpf() {
-        this.repository.save(validEntity);
-        assertTrue(this.repository.findManagerByCpf(validEntity.getCpf()).isPresent());
-    }
+  @Test
+  @DisplayName("should find a manager by cpf")
+  void findManagerByCpf() {
+    this.repository.save(validEntity);
+    assertTrue(this.repository.findManagerByCpf(validEntity.getCpf()).isPresent());
+  }
 
-    @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    @DisplayName("should not create a manager with null values")
-    void exception_nullValues() {
-        var invalidEmail = new Manager();
-        invalidEmail.setCpf("12312312300");
-        invalidEmail.setEmail(null);
-        invalidEmail.setPhone("1112341234");
-        invalidEmail.setFirstName("firstName");
-        invalidEmail.setLastName("lastName");
-        invalidEmail.setCreatedAt(LocalDateTime.now());
-        invalidEmail.setUpdatedAt(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidEmail));
+  @Test
+  @Transactional(propagation = Propagation.NOT_SUPPORTED)
+  @DisplayName("should not create a manager with null values")
+  void exception_nullValues() {
+    var invalidEmail = new Manager();
+    invalidEmail.setCpf("12312312300");
+    invalidEmail.setEmail(null);
+    invalidEmail.setPhone("1112341234");
+    invalidEmail.setFirstName("firstName");
+    invalidEmail.setLastName("lastName");
+    invalidEmail.setCreatedAt(LocalDateTime.now());
+    invalidEmail.setUpdatedAt(LocalDateTime.now());
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidEmail));
 
-        var invalidCpf = new Manager();
-        invalidCpf.setCpf(null);
-        invalidCpf.setEmail("email@email.com");
-        invalidCpf.setPhone("1112341234");
-        invalidCpf.setFirstName("firstName");
-        invalidCpf.setLastName("lastName");
-        invalidCpf.setCreatedAt(LocalDateTime.now());
-        invalidCpf.setUpdatedAt(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidCpf));
+    var invalidCpf = new Manager();
+    invalidCpf.setCpf(null);
+    invalidCpf.setEmail("email@email.com");
+    invalidCpf.setPhone("1112341234");
+    invalidCpf.setFirstName("firstName");
+    invalidCpf.setLastName("lastName");
+    invalidCpf.setCreatedAt(LocalDateTime.now());
+    invalidCpf.setUpdatedAt(LocalDateTime.now());
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidCpf));
 
-        var invalidFirstName = new Manager();
-        invalidFirstName.setCpf("12312312300");
-        invalidFirstName.setEmail("email@email.com");
-        invalidFirstName.setPhone("1112341234");
-        invalidFirstName.setFirstName(null);
-        invalidFirstName.setLastName("lastName");
-        invalidFirstName.setCreatedAt(LocalDateTime.now());
-        invalidFirstName.setUpdatedAt(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidFirstName));
+    var invalidFirstName = new Manager();
+    invalidFirstName.setCpf("12312312300");
+    invalidFirstName.setEmail("email@email.com");
+    invalidFirstName.setPhone("1112341234");
+    invalidFirstName.setFirstName(null);
+    invalidFirstName.setLastName("lastName");
+    invalidFirstName.setCreatedAt(LocalDateTime.now());
+    invalidFirstName.setUpdatedAt(LocalDateTime.now());
+    assertThrows(
+        DataIntegrityViolationException.class, () -> this.repository.save(invalidFirstName));
 
-        var invalidLastName = new Manager();
-        invalidLastName.setCpf("12312312300");
-        invalidLastName.setEmail("email@email.com");
-        invalidLastName.setPhone("1112341234");
-        invalidLastName.setFirstName("firstName");
-        invalidLastName.setLastName(null);
-        invalidLastName.setCreatedAt(LocalDateTime.now());
-        invalidLastName.setUpdatedAt(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidLastName));
+    var invalidLastName = new Manager();
+    invalidLastName.setCpf("12312312300");
+    invalidLastName.setEmail("email@email.com");
+    invalidLastName.setPhone("1112341234");
+    invalidLastName.setFirstName("firstName");
+    invalidLastName.setLastName(null);
+    invalidLastName.setCreatedAt(LocalDateTime.now());
+    invalidLastName.setUpdatedAt(LocalDateTime.now());
+    assertThrows(
+        DataIntegrityViolationException.class, () -> this.repository.save(invalidLastName));
 
-        var invalidPhone = new Manager();
-        invalidPhone.setCpf("12312312300");
-        invalidPhone.setEmail("email@email.com");
-        invalidPhone.setPhone(null);
-        invalidPhone.setFirstName("firstName");
-        invalidPhone.setLastName("lastName");
-        invalidPhone.setCreatedAt(LocalDateTime.now());
-        invalidPhone.setUpdatedAt(LocalDateTime.now());
-        assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidPhone));
+    var invalidPhone = new Manager();
+    invalidPhone.setCpf("12312312300");
+    invalidPhone.setEmail("email@email.com");
+    invalidPhone.setPhone(null);
+    invalidPhone.setFirstName("firstName");
+    invalidPhone.setLastName("lastName");
+    invalidPhone.setCreatedAt(LocalDateTime.now());
+    invalidPhone.setUpdatedAt(LocalDateTime.now());
+    assertThrows(DataIntegrityViolationException.class, () -> this.repository.save(invalidPhone));
 
-        assertEquals(0, this.repository.count());
-    }
+    assertEquals(0, this.repository.count());
+  }
 }
