@@ -6,7 +6,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
-import java.util.Objects;
 import org.hibernate.validator.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,12 +31,12 @@ public class ManagerController {
       @RequestParam(required = false) @Length(min = 11, max = 11) String cpf) {
     log.debug("[request] findManager(email: {} , cpf: {})", email, cpf);
 
-    if (Objects.nonNull(cpf)) {
+    if (cpf != null) {
       log.debug("[request] findManagerByCpf '{}'", cpf);
       return ResponseEntity.ok(this.service.findManagerByCpf(cpf));
     }
 
-    if (Objects.nonNull(email)) {
+    if (email != null) {
       log.debug("[request] findManagerByEmail '{}'", email);
       return ResponseEntity.ok(this.service.findManagerByEmail(email));
     }

@@ -1,5 +1,6 @@
 package br.ufpr.tads.msbantadsmanager.manager.port.in;
 
+import br.ufpr.tads.msbantadsmanager.manager.Manager;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;

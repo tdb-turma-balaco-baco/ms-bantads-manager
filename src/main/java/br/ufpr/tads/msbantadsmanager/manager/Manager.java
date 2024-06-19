@@ -5,11 +5,11 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name = "managers")
@@ -50,7 +50,7 @@ public class Manager implements Serializable {
   @Column(nullable = false)
   private LocalDateTime updatedAt;
 
-  public static Manager create(@NonNull CreateManager createManager) {
+  public static Manager create(CreateManager createManager) {
     var entity = new Manager();
     entity.setFirstName(createManager.firstName());
     entity.setLastName(createManager.lastName());
@@ -68,10 +68,6 @@ public class Manager implements Serializable {
 
   public Long getId() {
     return id;
-  }
-
-  public void setId(Long id) {
-    this.id = id;
   }
 
   public String getCpf() {
@@ -92,34 +88,6 @@ public class Manager implements Serializable {
 
   public String getPhone() {
     return phone;
-  }
-
-  public boolean isActive() {
-    return isActive;
-  }
-
-  public void setActive(boolean active) {
-    isActive = active;
-  }
-
-  public String getCreatedBy() {
-    return createdBy;
-  }
-
-  public String getUpdatedBy() {
-    return updatedBy;
-  }
-
-  public void setUpdatedBy(String updatedBy) {
-    this.updatedBy = updatedBy;
-  }
-
-  public LocalDateTime getCreatedAt() {
-    return createdAt;
-  }
-
-  public LocalDateTime getUpdatedAt() {
-    return updatedAt;
   }
 
   public void setCpf(String cpf) {

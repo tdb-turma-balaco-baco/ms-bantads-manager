@@ -77,6 +77,7 @@ public class ManagerService {
 
     boolean managerAlreadyExists =
         this.repository.countAllByEmailOrCpf(createManager.email(), createManager.cpf()) > 0;
+
     if (managerAlreadyExists) {
       throw new ResponseStatusException(HttpStatus.CONFLICT);
     }
