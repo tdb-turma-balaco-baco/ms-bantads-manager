@@ -5,9 +5,9 @@ import br.ufpr.tads.msbantadsmanager.manager.port.out.ManagerResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
@@ -15,14 +15,17 @@ import org.springframework.web.bind.annotation.*;
 import java.net.URI;
 import java.util.Objects;
 
-@Slf4j
 @RestController
 @RequestMapping(ManagerController.URL)
-@RequiredArgsConstructor
 public class ManagerController {
     public static final String URL = "/api/manager";
 
+    private final Logger log = LoggerFactory.getLogger(ManagerController.class);
     private final ManagerService service;
+
+    public ManagerController(ManagerService service) {
+        this.service = service;
+    }
 
     @GetMapping
     public ResponseEntity<?> findManager(@RequestParam(required = false) @Valid @Email @Length(min = 6) String email,

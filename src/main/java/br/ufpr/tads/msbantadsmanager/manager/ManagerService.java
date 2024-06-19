@@ -5,9 +5,9 @@ import br.ufpr.tads.msbantadsmanager.manager.port.out.ManagerResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Positive;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.validator.constraints.Length;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -16,11 +16,14 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@Slf4j
 @Service
-@RequiredArgsConstructor
 public class ManagerService {
+    private final Logger log = LoggerFactory.getLogger(ManagerService.class);
     private final ManagerRepository repository;
+
+    public ManagerService(ManagerRepository repository) {
+        this.repository = repository;
+    }
 
     public List<ManagerResponse> findAllManagers() {
         log.debug("[retrieving] findAllManagers");

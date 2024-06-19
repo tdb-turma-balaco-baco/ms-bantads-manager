@@ -1,7 +1,6 @@
 package br.ufpr.tads.msbantadsmanager.manager.port.out;
 
 import br.ufpr.tads.msbantadsmanager.manager.Manager;
-import jakarta.validation.constraints.NotNull;
 
 public record ManagerResponse(Long managerId,
                               String firstName,
@@ -9,7 +8,7 @@ public record ManagerResponse(Long managerId,
                               String email,
                               String cpf,
                               String phone) {
-    public static ManagerResponse of(@NotNull Manager manager) {
+    public static ManagerResponse of(Manager manager) {
         return new ManagerResponse(
                 manager.getId(),
                 manager.getFirstName(),

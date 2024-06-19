@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ManagerRepositoryTest {
     @ServiceConnection
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
     @Autowired
     private ManagerRepository repository;

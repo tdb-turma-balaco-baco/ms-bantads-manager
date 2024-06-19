@@ -31,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class ManagerControllerIntegrationTest {
     @ServiceConnection
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:latest");
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
     private static final String URL = ManagerController.URL;
     public static final CreateManager CREATE_MANAGER = new CreateManager(
             "firstName",

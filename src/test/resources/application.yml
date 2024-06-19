@@ -24,7 +24,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     username: bantads
     password: secret
-    url: jdbc:tc:postgresql:latest:///bantads
+    url: jdbc:tc:postgresql:16:///bantads
   flyway:
     enabled: true
   jpa:
