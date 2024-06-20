@@ -2,9 +2,9 @@ package br.ufpr.tads.msbantadsmanager;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-import br.ufpr.tads.msbantadsmanager.manager.ManagerController;
-import br.ufpr.tads.msbantadsmanager.manager.ManagerRepository;
-import br.ufpr.tads.msbantadsmanager.manager.ManagerService;
+import br.ufpr.tads.msbantadsmanager.api.rest.ManagerController;
+import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.ManagerEntityRepository;
+import br.ufpr.tads.msbantadsmanager.core.application.ManagerServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,13 +15,13 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-class MsBantadsManagerApplicationTests {
+class MsBantadsManagerEntityApplicationTests {
   @Container @ServiceConnection
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
   @Autowired private ManagerController controller;
-  @Autowired private ManagerService service;
-  @Autowired private ManagerRepository repository;
+  @Autowired private ManagerServiceImpl service;
+  @Autowired private ManagerEntityRepository repository;
 
   @Test
   void contextLoads() {
