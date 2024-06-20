@@ -5,12 +5,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.br.CPF;
 
 public record CreateManagerRequest(
     @NotEmpty String name,
     @NotEmpty @Email String email,
-    @NotEmpty @CPF String cpf,
+    @NotEmpty String cpf,
     @NotEmpty
         @Length(min = 11, max = 11)
         @Pattern(regexp = "^\\d{11}$", message = "field must be made of numbers")

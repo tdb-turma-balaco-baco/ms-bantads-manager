@@ -5,12 +5,11 @@ import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
 import br.ufpr.tads.msbantadsmanager.core.domain.vo.ManagerId;
 import jakarta.persistence.*;
 
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
 @Table(name = "managers")
-public class ManagerEntity extends BaseEntity<Manager, UUID, LocalDateTime> {
+public class ManagerEntity extends BaseEntity<Manager, UUID> {
   @Column(unique = true, nullable = false, length = 11)
   private String cpf;
 
@@ -24,7 +23,6 @@ public class ManagerEntity extends BaseEntity<Manager, UUID, LocalDateTime> {
   private String phoneNumber;
 
   @Column private int accounts = 0;
-  @Column private boolean isActive = true;
 
   public ManagerEntity() {}
 
@@ -34,9 +32,6 @@ public class ManagerEntity extends BaseEntity<Manager, UUID, LocalDateTime> {
     this.name = domainModel.getName();
     this.phoneNumber = domainModel.getPhoneNumber();
     this.accounts = domainModel.getAccounts();
-
-    setCreatedDate(LocalDateTime.now());
-    setCreatedBy("system");
   }
 
   @Override

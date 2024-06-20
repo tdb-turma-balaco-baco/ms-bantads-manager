@@ -8,6 +8,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.ufpr.tads.msbantadsmanager.api.rest.ManagerController;
+import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
+import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
 import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
 import br.ufpr.tads.msbantadsmanager.api.rest.dto.CreateManagerRequest;
 import br.ufpr.tads.msbantadsmanager.api.rest.dto.ManagerResponse;
@@ -28,6 +30,8 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.util.UUID;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Testcontainers
@@ -36,14 +40,11 @@ class ManagerEntityControllerIntegrationTest {
   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16");
 
   private static final String URL = ManagerController.URL;
-  public static final CreateManagerRequest CREATE_MANAGER =
-      new CreateManagerRequest(
-          "name",
-          "lastName",
-          "manager@email.com",
-          "12312312311",
-          "12345678901",
-          "admin@email.com");
+  public static final CreateManagerRequest CREATE_MANAGER_REQUEST =
+      new CreateManagerRequest("fullName", "manager@email.com", "12312312311", "12345678901");
+  public static final ManagerEntity MANAGER_ENTITY =
+      new ManagerEntity(
+          Manager.create(new CPF("12312312311"), "manager@email.com", "fullName", "12345678901"));
 
   @Autowired private MockMvc mockMvc;
   @Autowired private ObjectMapper objectMapper;
@@ -59,35 +60,7 @@ class ManagerEntityControllerIntegrationTest {
   @DisplayName("should not create a new manager without name")
   void return400_createWithoutFirstName(String emptyFirstName) throws Exception {
     var request =
-        new CreateManagerRequest(
-            emptyFirstName,
-            "lastName",
-            "manager@email.com",
-            "12312312311",
-            "11999999999",
-            "admin@email.com");
-    var json = objectMapper.writeValueAsString(request);
-
-    this.mockMvc
-        .perform(post(URL).content(json).contentType(MediaType.APPLICATION_JSON))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
-
-    assertEquals(0, this.repository.count());
-  }
-
-  @ParameterizedTest
-  @NullAndEmptySource
-  @DisplayName("should not create a new manager without lastName")
-  void return400_createWithoutLastName(String emptyLastName) throws Exception {
-    var request =
-        new CreateManagerRequest(
-            "name",
-            emptyLastName,
-            "manager@email.com",
-            "12312312311",
-            "11999999999",
-            "admin@email.com");
+        new CreateManagerRequest(emptyFirstName, "manager@email.com", "12312312311", "11999999999");
     var json = objectMapper.writeValueAsString(request);
 
     this.mockMvc
@@ -103,14 +76,7 @@ class ManagerEntityControllerIntegrationTest {
   @ValueSource(strings = {"123", "not numbers", "1234567890", "123456789012"})
   @DisplayName("should not create a new manager with invalid cpf")
   void return400_createWithInvalidCpf(String invalidCpf) throws Exception {
-    var request =
-        new CreateManagerRequest(
-            "name",
-            "lastName",
-            "manager@email.com",
-            invalidCpf,
-            "11999999999",
-            "admin@email.com");
+    var request = new CreateManagerRequest("name", "manager@email.com", invalidCpf, "11999999999");
     var json = objectMapper.writeValueAsString(request);
 
     this.mockMvc
@@ -126,9 +92,7 @@ class ManagerEntityControllerIntegrationTest {
   @ValueSource(strings = {"123", "not email", "123@.com", ".com@.br"})
   @DisplayName("should not create a new manager with invalid email")
   void return400_createWithInvalidEmail(String invalidEmail) throws Exception {
-    var request =
-        new CreateManagerRequest(
-            "name", "lastName", invalidEmail, "12345678901", "11999999999", "admin@email.com");
+    var request = new CreateManagerRequest("name", invalidEmail, "12345678901", "11999999999");
     var json = objectMapper.writeValueAsString(request);
 
     this.mockMvc
@@ -142,16 +106,10 @@ class ManagerEntityControllerIntegrationTest {
   @ParameterizedTest
   @NullAndEmptySource
   @ValueSource(strings = {"123", "123456789012", "not numbers"})
-  @DisplayName("should not create a new manager with invalid email")
-  void return400_createWithInvalidPhone(String invalidPhone) throws Exception {
+  @DisplayName("should not create a new manager with invalid phoneNumber")
+  void return400_createWithInvalidPhoneNumber(String invalidPhone) throws Exception {
     var request =
-        new CreateManagerRequest(
-            "name",
-            "lastName",
-            "manager@email.com",
-            "12345678901",
-            invalidPhone,
-            "admin@email.com");
+        new CreateManagerRequest("name", "manager@email.com", "12345678901", invalidPhone);
     var json = objectMapper.writeValueAsString(request);
 
     this.mockMvc
@@ -172,15 +130,11 @@ class ManagerEntityControllerIntegrationTest {
   @DisplayName("should not create a duplicate manager")
   void return409_createDuplicate(String createEmail, String createCpf, String email, String cpf)
       throws Exception {
-    var request =
-        new CreateManagerRequest(
-            "name", "lastName", createEmail, createCpf, "12345678901", "admin@email.com");
+    var request = new CreateManagerRequest("name", createEmail, createCpf, "12345678901");
     var json = objectMapper.writeValueAsString(request);
 
-    var saved =
-        new CreateManagerRequest(
-            "anotherName", "anotherLast", email, cpf, "12345678901", "admin@email.com");
-    this.repository.save(ManagerEntity.create(saved));
+    repository.save(
+        new ManagerEntity(Manager.create(new CPF(cpf), email, "anotherName", "12345678901")));
 
     this.mockMvc
         .perform(post(URL).content(json).contentType(MediaType.APPLICATION_JSON))
@@ -193,10 +147,10 @@ class ManagerEntityControllerIntegrationTest {
   @Test
   @DisplayName("should create a new manager successfully")
   void return201_createSuccessfully() throws Exception {
-    var json = objectMapper.writeValueAsString(CREATE_MANAGER);
+    var json = objectMapper.writeValueAsString(CREATE_MANAGER_REQUEST);
 
     var result =
-        this.mockMvc
+        mockMvc
             .perform(post(URL).content(json).contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isCreated())
@@ -205,7 +159,9 @@ class ManagerEntityControllerIntegrationTest {
     assertEquals(1, this.repository.count());
 
     var saved =
-        this.repository.findManagerByEmail(CREATE_MANAGER.email()).orElseThrow(AssertionError::new);
+        repository
+            .findManagerByEmail(CREATE_MANAGER_REQUEST.email())
+            .orElseThrow(AssertionError::new);
     assertEquals(result.getResponse().getHeader("Location"), URL + "/" + saved.getId());
   }
 
@@ -214,34 +170,28 @@ class ManagerEntityControllerIntegrationTest {
   @ValueSource(longs = {0L, -1L, -999L})
   @DisplayName("should not find a manager with invalid id")
   void return400_findManagerByInvalidId(Long invalidId) throws Exception {
-    this.repository.save(ManagerEntity.create(CREATE_MANAGER));
+    repository.save(MANAGER_ENTITY);
 
-    this.mockMvc
-        .perform(get(URL + "/" + invalidId))
-        .andDo(print())
-        .andExpect(status().isBadRequest());
+    mockMvc.perform(get(URL + "/" + invalidId)).andDo(print()).andExpect(status().isBadRequest());
   }
 
   @Test
   @DisplayName("should not find a manager with nonexistent id")
   void return404_findManagerByNonExistentId() throws Exception {
-    var saved = this.repository.save(ManagerEntity.create(CREATE_MANAGER));
-    long invalidId = saved.getId() + 1L;
+    repository.save(MANAGER_ENTITY);
 
-    this.mockMvc
-        .perform(get(URL + "/" + invalidId))
-        .andDo(print())
-        .andExpect(status().isNotFound());
+    UUID newRandomUUID = UUID.randomUUID();
+    mockMvc.perform(get(URL + "/" + newRandomUUID)).andDo(print()).andExpect(status().isNoContent());
   }
 
   @Test
   @DisplayName("should find a manager by id")
   void return200_findManagerById() throws Exception {
-    var saved = this.repository.save(ManagerEntity.create(CREATE_MANAGER));
-    var json = objectMapper.writeValueAsString(ManagerResponse.of(saved));
+    var saved = repository.save(MANAGER_ENTITY);
+    var json = objectMapper.writeValueAsString(new ManagerResponse(saved.getDomainModel()));
 
     var result =
-        this.mockMvc
+        mockMvc
             .perform(get(URL + "/" + saved.getId()))
             .andDo(print())
             .andExpect(status().isOk())
@@ -253,17 +203,17 @@ class ManagerEntityControllerIntegrationTest {
   @Test
   @DisplayName("should not find a manager with nonexistent email and cpf")
   void return404_findManagerByNonExistentEmailOrCpf() throws Exception {
-    this.repository.save(ManagerEntity.create(CREATE_MANAGER));
+    repository.save(MANAGER_ENTITY);
 
-    this.mockMvc
+    mockMvc
         .perform(get(URL).param("email", "another@email.com"))
         .andDo(print())
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNoContent());
 
-    this.mockMvc
-        .perform(get(URL).param("cpf", "00000000000"))
+    mockMvc
+        .perform(get(URL).param("cpf", "12345678900"))
         .andDo(print())
-        .andExpect(status().isNotFound());
+        .andExpect(status().isNoContent());
   }
 
   @ParameterizedTest
@@ -271,14 +221,14 @@ class ManagerEntityControllerIntegrationTest {
   @ValueSource(strings = {"1234567890", "123456789012", "not email", "123@.com", ".com@.br"})
   @DisplayName("should not find a manager with invalid email or cpf")
   void return400_findManagerByInvalidEmailOrCpf(String invalidValue) throws Exception {
-    this.repository.save(ManagerEntity.create(CREATE_MANAGER));
+    repository.save(MANAGER_ENTITY);
 
-    this.mockMvc
+    mockMvc
         .perform(get(URL).param("email", invalidValue))
         .andDo(print())
         .andExpect(status().isBadRequest());
 
-    this.mockMvc
+    mockMvc
         .perform(get(URL).param("cpf", invalidValue))
         .andDo(print())
         .andExpect(status().isBadRequest());
@@ -287,12 +237,12 @@ class ManagerEntityControllerIntegrationTest {
   @Test
   @DisplayName("should find a manager by email and cpf")
   void return200_findManagerByEmailAndCpf() throws Exception {
-    var saved = this.repository.save(ManagerEntity.create(CREATE_MANAGER));
-    var json = objectMapper.writeValueAsString(ManagerResponse.of(saved));
+    var saved = repository.save(MANAGER_ENTITY);
+    var json = objectMapper.writeValueAsString(new ManagerResponse(saved.getDomainModel()));
 
     var emailResult =
-        this.mockMvc
-            .perform(get(URL).param("email", CREATE_MANAGER.email()))
+        mockMvc
+            .perform(get(URL).param("email", CREATE_MANAGER_REQUEST.email()))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
@@ -300,8 +250,8 @@ class ManagerEntityControllerIntegrationTest {
     assertEquals(emailResult.getResponse().getContentAsString(), json);
 
     var cpfResult =
-        this.mockMvc
-            .perform(get(URL).param("cpf", CREATE_MANAGER.cpf()))
+        mockMvc
+            .perform(get(URL).param("cpf", CREATE_MANAGER_REQUEST.cpf()))
             .andDo(print())
             .andExpect(status().isOk())
             .andReturn();
@@ -313,20 +263,22 @@ class ManagerEntityControllerIntegrationTest {
   @DisplayName("should find all managers or return empty list")
   void return200_findAllManagers() throws Exception {
     var emptyResult =
-        this.mockMvc.perform(get(URL)).andDo(print()).andExpect(status().isOk()).andReturn();
+        mockMvc.perform(get(URL)).andDo(print()).andExpect(status().isOk()).andReturn();
     assertEquals("[]", emptyResult.getResponse().getContentAsString());
 
     for (int i = 0; i < 3; i++) {
-      var entity = ManagerEntity.create(CREATE_MANAGER);
-      entity.setCpf("1234567890" + i);
-      entity.setEmail("manager" + i + "@email.com");
+      var entity =
+          new ManagerEntity(
+              Manager.create(
+                  new CPF("1234567890" + i),
+                  "manager" + i + "@email.com",
+                  "randomName",
+                  "12345678901"));
 
-      this.repository.save(entity);
+      repository.save(entity);
     }
 
-    var result =
-        this.mockMvc.perform(get(URL)).andDo(print()).andExpect(status().isOk()).andReturn();
-
+    var result = mockMvc.perform(get(URL)).andDo(print()).andExpect(status().isOk()).andReturn();
     assertNotEquals(result.getResponse().getContentAsString(), "[]");
   }
 }

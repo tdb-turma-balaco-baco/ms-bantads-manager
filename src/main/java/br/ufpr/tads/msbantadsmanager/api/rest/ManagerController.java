@@ -39,8 +39,7 @@ public class ManagerController {
   @GetMapping
   public ResponseEntity<?> findManager(
       @RequestParam(required = false) @Valid @Email @Length(min = 6) String email,
-      @RequestParam(required = false) @Valid @org.hibernate.validator.constraints.br.CPF
-          String cpf) {
+      @RequestParam(required = false) @Valid String cpf) {
     log.debug("[request] findManager(email: {} , cpf: {})", email, cpf);
 
     if (cpf != null) {
