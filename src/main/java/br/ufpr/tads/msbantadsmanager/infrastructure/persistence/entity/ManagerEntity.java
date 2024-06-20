@@ -1,10 +1,9 @@
 package br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity;
 
-import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
+import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
 import br.ufpr.tads.msbantadsmanager.core.domain.vo.ManagerId;
 import jakarta.persistence.*;
-
 import java.util.UUID;
 
 @Entity

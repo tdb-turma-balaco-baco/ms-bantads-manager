@@ -3,8 +3,8 @@ package br.ufpr.tads.msbantadsmanager;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import br.ufpr.tads.msbantadsmanager.api.rest.ManagerController;
-import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.ManagerEntityRepository;
 import br.ufpr.tads.msbantadsmanager.core.application.ManagerServiceImpl;
+import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.ManagerEntityRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

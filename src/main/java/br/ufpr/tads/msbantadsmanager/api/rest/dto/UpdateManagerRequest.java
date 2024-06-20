@@ -3,11 +3,10 @@ package br.ufpr.tads.msbantadsmanager.api.rest.dto;
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
+import java.util.function.Predicate;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import java.util.function.Predicate;
 
 public record UpdateManagerRequest(
     String name,

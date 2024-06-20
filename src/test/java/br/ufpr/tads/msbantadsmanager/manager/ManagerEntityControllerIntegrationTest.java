@@ -8,13 +8,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import br.ufpr.tads.msbantadsmanager.api.rest.ManagerController;
-import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
-import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
-import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
 import br.ufpr.tads.msbantadsmanager.api.rest.dto.CreateManagerRequest;
 import br.ufpr.tads.msbantadsmanager.api.rest.dto.ManagerResponse;
+import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
+import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
 import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.ManagerEntityRepository;
+import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -29,8 +30,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
-
-import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
@@ -181,7 +180,10 @@ class ManagerEntityControllerIntegrationTest {
     repository.save(MANAGER_ENTITY);
 
     UUID newRandomUUID = UUID.randomUUID();
-    mockMvc.perform(get(URL + "/" + newRandomUUID)).andDo(print()).andExpect(status().isNoContent());
+    mockMvc
+        .perform(get(URL + "/" + newRandomUUID))
+        .andDo(print())
+        .andExpect(status().isNoContent());
   }
 
   @Test

@@ -1,8 +1,7 @@
 package br.ufpr.tads.msbantadsmanager.core.domain.vo;
 
-import org.springframework.util.Assert;
-
 import java.util.UUID;
+import org.springframework.util.Assert;
 
 public record ManagerId(UUID id) {
   public ManagerId {

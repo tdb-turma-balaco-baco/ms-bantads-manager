@@ -4,11 +4,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
 import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
-import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
-import br.ufpr.tads.msbantadsmanager.api.rest.dto.CreateManagerRequest;
-import java.time.LocalDateTime;
-
 import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.ManagerEntityRepository;
+import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
