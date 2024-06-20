@@ -1,7 +1,6 @@
 package br.ufpr.tads.msbantadsmanager.api.rest.dto;
 
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
-
 import java.util.UUID;
 
 public record ManagerResponse(UUID id, String name, String email, String cpf, String phoneNumber) {

@@ -1,14 +1,12 @@
 package br.ufpr.tads.msbantadsmanager.core.application;
 
-import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
+import br.ufpr.tads.msbantadsmanager.core.domain.vo.CPF;
 import br.ufpr.tads.msbantadsmanager.core.domain.vo.ManagerId;
 import br.ufpr.tads.msbantadsmanager.core.port.in.ManagerService;
 import br.ufpr.tads.msbantadsmanager.core.port.out.ManagerRepository;
-
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

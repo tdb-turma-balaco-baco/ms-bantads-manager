@@ -21,8 +21,7 @@ public class Manager {
     this.accounts = accounts;
   }
 
-  public static Manager create(
-      CPF cpf, String email, String name, String phoneNumber) {
+  public static Manager create(CPF cpf, String email, String name, String phoneNumber) {
     return new Manager(new ManagerId(), cpf, email, name, phoneNumber, 0);
   }
 

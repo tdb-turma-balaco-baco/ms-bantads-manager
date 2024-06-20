@@ -3,12 +3,11 @@ package br.ufpr.tads.msbantadsmanager.infrastructure.persistence;
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
 import br.ufpr.tads.msbantadsmanager.core.port.out.ManagerRepository;
 import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
 @Component
 public class JpaManagerRepository implements ManagerRepository {

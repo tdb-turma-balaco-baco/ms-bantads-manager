@@ -2,7 +2,6 @@ package br.ufpr.tads.msbantadsmanager.core.port.out;
 
 import br.ufpr.tads.msbantadsmanager.core.domain.model.Manager;
 import br.ufpr.tads.msbantadsmanager.core.port.CrudOperations;
-
 import java.util.Optional;
 import java.util.UUID;
 

@@ -1,9 +1,8 @@
 package br.ufpr.tads.msbantadsmanager.infrastructure.persistence;
 
+import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
 import java.util.Optional;
 import java.util.UUID;
-
-import br.ufpr.tads.msbantadsmanager.infrastructure.persistence.entity.ManagerEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
