@@ -45,8 +45,7 @@ public class ManagerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> findManagerById(
-      @PathVariable @Valid @NotNull @Positive Long id) {
+  public ResponseEntity<?> findManagerById(@PathVariable @Valid @NotNull @Positive Long id) {
     log.debug("[request] findManagerById '{}'", id);
     return ResponseEntity.ok(this.service.findManagerById(id));
   }

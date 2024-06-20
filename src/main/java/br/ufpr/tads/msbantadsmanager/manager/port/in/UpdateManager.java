@@ -11,5 +11,4 @@ public record UpdateManager(
     @Length(min = 11, max = 11)
         @Pattern(regexp = "^\\d{11}$", message = "field must be made of numbers")
         String phone,
-    String lastModifiedBy) {
-}
+    String lastModifiedBy) {}
