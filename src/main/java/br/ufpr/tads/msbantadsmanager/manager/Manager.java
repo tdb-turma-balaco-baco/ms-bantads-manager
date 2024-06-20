@@ -5,15 +5,17 @@ import jakarta.persistence.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.domain.Auditable;
 
 @Entity
 @Table(name = "managers")
-public class Manager implements Serializable {
+public class Manager implements Serializable, Auditable<String, Long, LocalDateTime> {
   @Serial private static final long serialVersionUID = 5397338376573272269L;
 
   @Id
@@ -36,19 +38,21 @@ public class Manager implements Serializable {
   @Column(nullable = false)
   private String phone;
 
+  @Column private int accounts = 0;
+
   @Column private boolean isActive = true;
 
   @CreatedBy @Column private String createdBy;
 
-  @LastModifiedBy @Column private String updatedBy;
+  @LastModifiedBy @Column private String lastModifiedBy;
 
   @CreatedDate
   @Column(nullable = false, updatable = false)
-  private LocalDateTime createdAt;
+  private LocalDateTime creationDate;
 
   @LastModifiedDate
   @Column(nullable = false)
-  private LocalDateTime updatedAt;
+  private LocalDateTime lastModifiedDate;
 
   public static Manager create(CreateManager createManager) {
     var entity = new Manager();
@@ -60,14 +64,19 @@ public class Manager implements Serializable {
     entity.setCreatedBy(createManager.createdBy());
 
     LocalDateTime now = LocalDateTime.now();
-    entity.setCreatedAt(now);
-    entity.setUpdatedAt(now);
+    entity.setCreatedDate(now);
+    entity.setLastModifiedDate(now);
 
     return entity;
   }
 
   public Long getId() {
     return id;
+  }
+
+  @Override
+  public boolean isNew() {
+    return id == null;
   }
 
   public String getCpf() {
@@ -110,15 +119,42 @@ public class Manager implements Serializable {
     this.phone = phone;
   }
 
-  public void setCreatedAt(LocalDateTime createdAt) {
-    this.createdAt = createdAt;
+  @Override
+  public Optional<String> getCreatedBy() {
+    return Optional.of(createdBy);
   }
 
   public void setCreatedBy(String createdBy) {
     this.createdBy = createdBy;
   }
 
-  public void setUpdatedAt(LocalDateTime updatedAt) {
-    this.updatedAt = updatedAt;
+  @Override
+  public Optional<LocalDateTime> getCreatedDate() {
+    return Optional.of(creationDate);
+  }
+
+  @Override
+  public void setCreatedDate(LocalDateTime creationDate) {
+    this.creationDate = creationDate;
+  }
+
+  @Override
+  public Optional<String> getLastModifiedBy() {
+    return Optional.of(lastModifiedBy);
+  }
+
+  @Override
+  public void setLastModifiedBy(String lastModifiedBy) {
+    this.lastModifiedBy = lastModifiedBy;
+  }
+
+  @Override
+  public Optional<LocalDateTime> getLastModifiedDate() {
+    return Optional.of(lastModifiedDate);
+  }
+
+  @Override
+  public void setLastModifiedDate(LocalDateTime lastModifiedDate) {
+    this.lastModifiedDate = lastModifiedDate;
   }
 }

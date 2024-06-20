@@ -1,16 +1,16 @@
 package br.ufpr.tads.msbantadsmanager.manager;
 
 import br.ufpr.tads.msbantadsmanager.manager.port.in.CreateManager;
-import br.ufpr.tads.msbantadsmanager.manager.port.out.ManagerResponse;
+import br.ufpr.tads.msbantadsmanager.manager.port.in.UpdateManager;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import java.net.URI;
 import org.hibernate.validator.constraints.Length;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.lang.NonNull;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -45,16 +45,25 @@ public class ManagerController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ManagerResponse> findManagerById(
-      @PathVariable @Valid @NonNull @Positive Long id) {
+  public ResponseEntity<?> findManagerById(
+      @PathVariable @Valid @NotNull @Positive Long id) {
     log.debug("[request] findManagerById '{}'", id);
     return ResponseEntity.ok(this.service.findManagerById(id));
   }
 
   @PostMapping
-  public ResponseEntity<?> create(@RequestBody @Valid @NonNull CreateManager request) {
+  public ResponseEntity<?> create(@RequestBody @Valid @NotNull CreateManager request) {
     log.debug("[request] create {}", request);
     Long id = this.service.create(request);
     return ResponseEntity.created(URI.create(URL + "/" + id)).build();
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<?> update(
+      @RequestBody @Valid @NotNull UpdateManager request,
+      @PathVariable @Valid @NotNull @Positive Long id) {
+    log.debug("[request] update {}", request);
+    this.service.update(id, request);
+    return ResponseEntity.noContent().build();
   }
 }
