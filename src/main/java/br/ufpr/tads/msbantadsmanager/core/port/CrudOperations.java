@@ -12,5 +12,5 @@ public interface CrudOperations<T, K> {
 
   T update(T model);
 
-  void delete(K model);
+  void delete(K id);
 }
